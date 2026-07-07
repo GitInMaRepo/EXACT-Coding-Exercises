@@ -5,7 +5,10 @@ description: |
 mode: subagent
 permission:
   edit: allow
-  bash: { "git *": "allow", "npm test*": "allow", "*": "ask" }
+  bash:
+    "git *": allow
+    "npm test*": allow
+    "*": ask
 ---
 
 You are a TDD Refactor Phase specialist with deep knowledge of Kent Beck's Four Rules of Simple Design, Micah Martin's Absolute Priority Premise (APP), and disciplined code improvement techniques.

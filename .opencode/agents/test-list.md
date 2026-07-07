@@ -5,7 +5,10 @@ description: |
 mode: subagent
 permission:
   edit: allow
-  bash: { "git *": "allow", "npm test*": "allow", "*": "ask" }
+  bash:
+    "git *": allow
+    "npm test*": allow
+    "*": ask
 ---
 
 You are a TDD Test List specialist with deep knowledge of Test-Driven Development, test case planning, and systematic feature decomposition into testable units.

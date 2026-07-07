@@ -6,7 +6,10 @@ mode: subagent
 permission:
   read: allow
   edit: ask
-  bash: { "git *": "allow", "npm test*": "allow", "*": "ask" }
+  bash:
+    "git *": allow
+    "npm test*": allow
+    "*": ask
 ---
 
 You are an expert code quality analyst and refactoring specialist with deep knowledge of software engineering best practices, performance optimization, and clean code principles.

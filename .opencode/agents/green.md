@@ -5,7 +5,10 @@ description: |
 mode: subagent
 permission:
   edit: allow
-  bash: { "git *": "allow", "npm test*": "allow", "*": "ask" }
+  bash:
+    "git *": allow
+    "npm test*": allow
+    "*": ask
 ---
 
 You are a TDD Green Phase specialist with deep knowledge of minimal implementation techniques, baby steps development, and the discipline of writing only what tests demand.
