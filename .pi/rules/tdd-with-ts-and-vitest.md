@@ -1,9 +1,3 @@
----
-description: TypeScript and Vitest conventions for spec files
-globs: ["**/*.spec.ts", "**/*.ts"]
-alwaysApply: false
----
-
 # TDD with TypeScript and Vitest
 
 ## Test File Creation

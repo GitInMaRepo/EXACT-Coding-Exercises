@@ -127,62 +127,97 @@ Expected test output:
       Tests  1 passed (1)
 ```
 
+(If you have already worked through exercises, you will see more files and tests
+than this — what matters is that everything passes.)
+
 If all checks pass, you're ready for the workshop!
 
-## Claude Code Configuration
+## Agent Configuration
 
-This repo ships with a preconfigured `.claude/` directory that enforces the EXACT Coding workflow when using Claude Code. The configuration consists of **Rules**, **Agents**, and **Commands**.
+This repo ships the EXACT Coding TDD workflow preconfigured for **four coding
+agents**. They are equivalent — use whichever you have. Version **2026-07-28**.
 
-### Rules (`.claude/rules/`)
+| Agent | Directory | Start a TDD session with |
+|-------|-----------|--------------------------|
+| Claude Code | `.claude/` | Ask for TDD in plain language ("let's TDD this kata") |
+| pi | `.pi/` | `/skill:tdd`, or ask for TDD in plain language |
+| OpenCode | `.opencode/` | The `tdd` command |
+| Cursor | `.cursor/` | Ask for TDD in plain language |
 
-Rules are loaded automatically into Claude's context at startup. They define the guardrails for the entire session.
+**You have to ask for the workflow.** None of the four load it automatically. A
+session where you never mention TDD gets no Red-Green-Refactor discipline, no
+prediction blocks, no checkpoints — which is what you want when you are just
+fixing a typo. Say "using TDD" and the whole workflow comes in.
 
-| File | Purpose |
-|------|---------|
-| `tdd.md` | Core TDD workflow -- mandates the use of specialized agents for every TDD phase |
-| `human-in-the-loop.md` | Checkpoint rules -- Claude must stop after every phase (Red, Green, Refactor) and wait for explicit approval |
-| `tdd_with_ts_and_vitest.md` | TypeScript & Vitest conventions (test file naming, imports, test execution) |
+### The workflow
 
-### Agents (`.claude/agents/`)
+Five phases: Test-List once, then Red-Green-Refactor per test, then a single
+End-Refactor pass over everything at the end.
 
-Agents are specialized sub-agents that run in an **isolated context**. Each agent focuses on exactly one TDD phase, preventing context pollution and enforcing discipline.
+| Phase | Runs in | What happens |
+|-------|---------|--------------|
+| Test List | Main context | Turns the spec into `it.todo()` entries, ordered simple to complex |
+| Red | Main context | Activates ONE test, predicts the failure (the Guessing Game), verifies it fails for the right reason |
+| Green | Main context | Writes the minimal code to pass — hardcoded returns are fine |
+| Refactor | **Isolated subagent** | Four Rules of Simple Design, naming first, APP mass before/after |
+| End-Refactor | **Isolated subagent** | Runs once at the end over the whole `src/`, measuring ESLint smells, cognitive complexity, APP mass and McCabe complexity around each change |
 
-| Agent | Phase | Description |
-|-------|-------|-------------|
-| `test-list` | Test List | Creates `it.todo()` entries for base functionality, ordered simple to complex |
-| `red` | Red | Activates ONE test, makes a prediction (Guessing Game), verifies it fails for the right reason |
-| `green` | Green | Implements the minimal code to make the failing test pass (hardcoded returns are fine!) |
-| `refactor` | Refactor | Applies the Four Rules of Simple Design and calculates APP mass before/after |
-| `code-improvement-scanner` | Review | Analyzes code for readability, performance, and best practice improvements |
+Test-List, Red and Green share one context on purpose — the predictions, error
+messages, and minimal implementations only make sense together. Both refactor
+phases run in a **fresh, isolated context** on purpose: the refactorer sees the
+code as it stands, not the history of how it got there, which is what lets it
+judge the result on its own merits.
 
-### Commands (`.claude/commands/`)
+The End-Refactor pass exists because a per-cycle refactor only ever sees one
+file mid-flight. After the last test passes, the design has stabilised and
+cross-file duplication and complexity hot spots become visible for the first
+time.
 
-Commands are slash commands that can be invoked manually during a Claude Code session (e.g. `/red`, `/green`, `/refactor`). They provide the same functionality as agents but run in the **main context** instead of an isolated one.
+### Human-in-the-Loop
 
-| Command | Usage |
-|---------|-------|
-| `/test-list` | Create a test list with `it.todo()` entries |
-| `/red` | Enter Red phase -- activate a test and predict the failure |
-| `/green` | Enter Green phase -- write minimal implementation |
-| `/refactor` | Refactor using Simple Design Rules and APP |
-| `/code-review` | Multi-stage code review (Review -> Evaluation -> Conclusion) |
+The default is **`full-hitl`**: the agent stops and waits for your approval
+after Test-List, after Red, and after Refactor — and immediately whenever a
+prediction turns out wrong. It does **not** stop after Green; Green is the most
+mechanical phase, and stopping there mostly produces "yes, continue".
 
-### Agents vs. Commands
+A wrong prediction is always a hard stop. It means the model's picture of the
+system disagrees with reality, and continuing usually compounds the
+misunderstanding.
 
-| | Agents | Commands |
-|---|--------|----------|
-| Context | Isolated (fresh context per phase) | Shared (main conversation context) |
-| Invocation | Automatic (via rules) | Manual (`/command-name`) |
-| Best for | Strict TDD discipline | Quick, interactive use |
+Other levels: `refactor-only`, `red-only`, `every-n-tests N`, `task-end`,
+`autonomous`. Change one line at the top of your agent's HITL file:
 
-### TDD Workflow
+| Agent | File |
+|-------|------|
+| Claude Code | `.claude/rules/human-in-the-loop.md` |
+| pi | `.pi/rules/human-in-the-loop.md` |
+| OpenCode | `.opencode/rules/human-in-the-loop.md` |
+| Cursor | `.cursor/rules/human-in-the-loop.mdc` |
 
-The typical EXACT Coding workflow with Claude Code:
+That file is the single source of truth. The phase files point at it but contain
+no stop logic themselves, so changing the level changes the whole workflow.
 
-1. **Start** -- Claude automatically uses the `test-list` agent to create `it.todo()` entries
-2. **Red** -- The `red` agent activates one test, predicts the failure, verifies it fails
-3. **Green** -- The `green` agent writes minimal code to make the test pass
-4. **Refactor** -- The `refactor` agent improves the code (naming, duplication, APP mass)
-5. **Repeat** -- Back to step 2 for the next test
+### Example Mapping
 
-After every phase, Claude stops and asks for approval before continuing (Human-in-the-Loop).
+Separate from TDD, for exploring a feature *before* you write any tests:
+`/example-mapping` in Claude Code, or the `example-mapping` command in OpenCode.
+It facilitates a session over four card colours — story, rules, examples,
+questions — and writes the result to a markdown file. It asks you for the rules
+and examples; it does not invent them.
+
+### pi: one extra step
+
+pi has no built-in subagent mechanism, so the refactor phases rely on a small
+extension bundled at `.pi/extensions/subagent/`. **On first use pi asks whether
+you trust the project — say yes.** If you decline, pi has no way to delegate and
+you end up with a workflow that silently skips refactoring.
+
+The other three agents have subagents natively and need nothing extra.
+
+### Where the workflow comes from
+
+The configuration is generated from the workflow research in
+`agentic_coding_lab_project` and validated against Claude Opus 4.8. Each
+directory carries its own `README.md` and `VERSION`. For the lineage and the
+experiments behind it, see `research/workflow-dev/workflow-construction.md` in
+that repo.

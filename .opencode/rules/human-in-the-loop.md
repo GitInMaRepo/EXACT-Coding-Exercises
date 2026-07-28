@@ -1,8 +1,3 @@
----
-description: Human-in-the-loop checkpoint policy for the TDD workflow — the Autonomy Level setting that decides where the Red-Green-Refactor cycle pauses for approval. Apply together with the tdd rule whenever a TDD session is running.
-alwaysApply: false
----
-
 # Human-in-the-Loop (HITL)
 
 This file is the **single source of truth** for when the TDD workflow stops and

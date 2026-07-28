@@ -9,7 +9,7 @@
 
 ## Running Tests
 
-Run tests with `pnpm test`.
+Run tests with `npm test`.
 
 ## Example Test Template
 
