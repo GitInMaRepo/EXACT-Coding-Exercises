@@ -200,10 +200,16 @@ no stop logic themselves, so changing the level changes the whole workflow.
 ### Example Mapping
 
 Separate from TDD, for exploring a feature *before* you write any tests:
-`/example-mapping` in Claude Code, or the `example-mapping` command in OpenCode.
-It facilitates a session over four card colours — story, rules, examples,
-questions — and writes the result to a markdown file. It asks you for the rules
+`/example-mapping` in Claude Code, or the `example-mapping` skill in Cursor,
+OpenCode and pi. It facilitates a session over story, rules, examples and
+questions, plus New Story cards for behaviour that turns out to belong to a
+different story. The result goes to a markdown file. It asks you for the rules
 and examples; it does not invent them.
+
+Note that this runs as an **interview**, not as a Three Amigos workshop: since
+the domain expert is right there in the conversation, open questions get asked
+immediately rather than parked. A red card is what happens when you cannot
+answer — not the default move.
 
 ### pi: one extra step
 
