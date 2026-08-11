@@ -92,14 +92,6 @@ You MUST output the full Step 7 block verbatim with `Correct` or `Incorrect`
 chosen for each prediction. Do not abbreviate. Do not collapse the two
 prediction lines into one.
 
-**Why this format matters:** The block is mechanically parsed by tooling to
-verify the Guessing Game discipline. The parser expects two lines matching
-`(- |✅ |❌ )(Correct|Incorrect)` per cycle — one for the compilation
-prediction, one for the runtime prediction. Collapsing them into a single
-line, summarizing them as "both correct", or skipping the block entirely
-loses the signal. Format consistency here matters even outside batch runs:
-it makes the prediction quality visible to you and any future reader.
-
 ```
 🔴 Red Phase Complete:
 **Test Activated**: "should return 0 for empty input"
@@ -109,13 +101,6 @@ it makes the prediction quality visible to you and any future reader.
 
 Proceeding to Green phase.
 ```
-
-### Step 8: Apply HITL Checkpoint
-
-Consult `@.claude/rules/human-in-the-loop.md`. If the current Autonomy Level
-includes a stop after Red phase, present the checkpoint template from that
-file and wait for explicit user approval before proceeding to Green. If the
-level does not stop after Red, proceed directly to Green phase.
 
 ## Important Guidelines
 
@@ -145,9 +130,16 @@ Investigating the discrepancy before proceeding.
 ```
 
 Then apply the **Prediction Failure Recovery** procedure in
-`@.claude/rules/human-in-the-loop.md`. In every Autonomy Level except
+`@.claude/skills/tdd/human-in-the-loop.md`. In every Autonomy Level except
 `autonomous`, this is a hard stop — the human decides whether you continue
 or investigate first.
+
+### Step 8: Apply HITL Checkpoint
+
+Consult `@.claude/skills/tdd/human-in-the-loop.md`. If the current Autonomy Level
+includes a stop after Red phase, present the checkpoint template from that
+file and wait for explicit user approval before proceeding to Green. If the
+level does not stop after Red, proceed directly to Green phase.
 
 ## Completion
 

@@ -1,10 +1,12 @@
 ---
-description: Conduct an Example Mapping session to explore a feature before TDD - discover rules, examples, open questions and out-of-scope stories collaboratively
+name: example-mapping
+description: Collaborative Example Mapping session (Matt Wynne) to explore a feature before implementation — discovers rules, concrete examples, open questions and out-of-scope stories through conversation. Invoke when the user explicitly asks for Example Mapping, wants to explore or clarify requirements before coding, or asks to prepare a feature for TDD. Do NOT invoke for coding tasks where the requirements are already settled.
 ---
 
-# Example Mapping Command
 
-When this command is triggered, conduct an interactive Example Mapping session with the user.
+# Example Mapping
+
+Conduct an interactive Example Mapping session with the user.
 
 ## What is Example Mapping?
 

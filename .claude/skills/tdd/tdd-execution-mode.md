@@ -3,7 +3,7 @@
 This workflow runs the TDD cycle as a sequence of Skill invocations
 (`/test-list`, `/red`, `/green`) and two Task subagents (`refactor` per cycle,
 `end-refactor` once at the end). Whether the cycle pauses for human approval
-between phases is controlled by `@.claude/rules/human-in-the-loop.md` (the
+between phases is controlled by `@.claude/skills/tdd/human-in-the-loop.md` (the
 Autonomy Level setting at the top of that file).
 
 ## Workflow Sequence
@@ -18,14 +18,14 @@ Autonomy Level setting at the top of that file).
 4. **End-Refactor Phase** → Launch the `end-refactor` subagent via the Task
    tool ONCE, over the whole `src/`
 5. At each phase boundary, consult
-   `@.claude/rules/human-in-the-loop.md` to decide whether to stop or
+   `@.claude/skills/tdd/human-in-the-loop.md` to decide whether to stop or
    continue
 
 ## Subagent prompt contracts
 
 Both refactor phases run in isolated contexts with no memory of the
 test-list, red, or green phases. What to pass each of them is specified in
-`@.claude/rules/subagent-prompts.md`.
+`@.claude/skills/tdd/subagent-prompts.md`.
 
 After a subagent returns, read its summary, then consult HITL before
 proceeding to the next phase.

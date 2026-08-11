@@ -69,14 +69,6 @@ After creating the test list, output:
 **Next Step**: Invoke `/red` to activate the first test.
 ```
 
-### Step 6: Apply HITL Checkpoint
-
-Consult `@.claude/rules/human-in-the-loop.md`. If the current Autonomy Level
-includes a stop after Test-List (the default `full-hitl` does), present the
-checkpoint template from that file and wait for explicit user approval
-before proceeding to the first Red phase. If the level does not stop after
-Test-List, proceed directly to Red.
-
 ## Important Guidelines
 
 ### DO
@@ -94,6 +86,14 @@ Test-List, proceed directly to Red.
 - ❌ Think about implementation instead of behavior
 - ❌ Miss an entire operation described in the spec
 - ❌ Order randomly
+
+### Step 6: Apply HITL Checkpoint
+
+Consult `@.claude/skills/tdd/human-in-the-loop.md`. If the current Autonomy Level
+includes a stop after Test-List (the default `full-hitl` does), present the
+checkpoint template from that file and wait for explicit user approval
+before proceeding to the first Red phase. If the level does not stop after
+Test-List, proceed directly to Red.
 
 ## Completion
 

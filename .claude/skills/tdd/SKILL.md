@@ -7,12 +7,10 @@ description: Strict Test-Driven Development workflow (Red-Green-Refactor) with c
 
 ## ⚠️ CRITICAL: Skill + Subagent Usage is MANDATORY
 
-This workflow is a **hybrid** of two architectures:
+This workflow is a **hybrid** of v4 and v5:
 
-- **`/test-list`, `/red`, `/green`** run as **Skills in the main context** — they share state, so the model keeps test list, last error, and current implementation in working memory.
-- **Refactor** runs as a **Task subagent with isolated context** — the refactor agent sees only the current source/tests, not the full red/green history. Hypothesis: refactoring benefits most from a fresh perspective free of implementation bias.
-
-The skill and subagent invocations are not just stylistic. If you write test code, implementation code, or refactorings directly in the main context instead of delegating, the workflow loses the architectural separation that makes the hybrid work.
+- **`/test-list`, `/red`, `/green`** run as **Skills in the main context** (like v5) — they share state, so the model keeps test list, last error, and current implementation in working memory.
+- **Refactor** runs as a **Task subagent with isolated context** (like v4) — the refactor agent sees only the current source/tests, not the full red/green history. Hypothesis: refactoring benefits most from a fresh perspective free of implementation bias.
 
 Do NOT perform TDD phases without invoking the appropriate skill or agent.
 
@@ -27,11 +25,12 @@ Do NOT perform TDD phases without invoking the appropriate skill or agent.
 
 | Phase | Mechanism | Invoke With |
 |-------|-----------|-------------|
+| Example Mapping (optional, before TDD) | **Skill** | `Skill({ skill: "example-mapping" })` |
 | Test List | **Skill** (main context) | `Skill({ skill: "test-list" })` |
 | Red Phase | **Skill** (main context) | `Skill({ skill: "red" })` |
 | Green Phase | **Skill** (main context) | `Skill({ skill: "green" })` |
-| Refactor Phase (per cycle) | **Task subagent** (isolated context) | `Task({ subagent_type: "refactor", prompt: ... })` |
-| End-Refactor (once, after last cycle) | **Task subagent** (isolated context) | `Task({ subagent_type: "end-refactor", prompt: ... })` |
+| Refactor Phase | **Task subagent** (isolated context) | `Task({ subagent_type: "refactor", prompt: ... })` |
+| Final quality pass (optional, manual) | **Skill** | `Skill({ skill: "end-refactor" })` |
 
 **If you find yourself writing test code, implementation code, or a refactoring without invoking the right tool first, you are doing it WRONG.**
 
@@ -39,9 +38,19 @@ Do NOT perform TDD phases without invoking the appropriate skill or agent.
 
 This project follows strict Test-Driven Development practices using the Red-Green-Refactor cycle. v6 keeps red and green in a shared context so the predictions, error messages, and minimal implementations stay coherent — and isolates refactoring so the model evaluates the resulting code on its own merits.
 
-This baseline supports **configurable human-in-the-loop checkpoints** between phases. See `@.claude/rules/human-in-the-loop.md` for the Autonomy Level setting and stop behavior.
+This baseline supports **configurable human-in-the-loop checkpoints** between
+phases. See `@.claude/skills/tdd/human-in-the-loop.md` for the Autonomy Level
+setting and stop behavior.
 
 ## TDD Workflow
+
+### 0. Example Mapping (optional, before the loop)
+
+When the requirements are not yet settled, run an Example Mapping session
+first: `Skill({ skill: "example-mapping" })`. It discovers business rules and
+concrete examples through conversation, and hands its examples to the Test
+List phase below. Skip it when the spec is already clear — the loop starts at
+step 1 either way.
 
 ### 1. Test List Phase
 **🚨 INVOKE SKILL**: `Skill({ skill: "test-list" })`
@@ -100,32 +109,35 @@ The agent will improve code while keeping tests green:
 ### 5. Repeat
 Return to step 2 (Red phase) for the next test. **Invoke the `red` skill again.**
 
-### 6. End-Refactor (once, after the last green cycle)
-**🚨 LAUNCH AGENT**: `Task({ subagent_type: "end-refactor", prompt: ... })`
+### Optional: Final Quality Pass
 
-After the last per-cycle refactor returns and all tests pass, launch the `end-refactor` subagent exactly once. It refactors the **whole production tree** (`src/`, excluding `*.spec.ts`) using deterministic pre/post measurements: ESLint smells + SonarJS cognitive complexity, plus APP mass and McCabe cyclomatic complexity. It iterates one change at a time until no metric improves further.
-
-**Required prompt context**:
+When all tests are implemented and passing, the work is done — the per-cycle
+refactor has already polished every step. If you additionally want a measured
+cleanup across the *whole* production tree, the `end-refactor` skill is
+available:
 
 ```
-Task({
-  subagent_type: "end-refactor",
-  prompt: `
-    Implementation files: src/<all non-spec *.ts>
-    Test files: src/<*.spec.ts>
-    Passing tests: <count>
-
-    Run the final metric-driven refactoring pass over the whole src/.
-    Iterate ONE change at a time with pre/post measurement (ESLint, cognitive,
-    APP, McCabe). Stop when no metric improves further or no improvement is
-    possible.
-  `
-})
+Skill({ skill: "end-refactor" })
 ```
 
-After the end-refactor subagent returns, read its summary and proceed to the Done Marker.
+It measures ESLint smells, cognitive complexity, McCabe and APP mass over all
+of `src/`, then applies one change at a time until no metric improves further.
+This is **opt-in and manual** — it is not a phase of the loop. It costs
+noticeably more time and tokens than a per-cycle refactor and pays off mainly
+on multi-file code, where cross-file duplication and complexity hot spots have
+had room to form. On a single small module the per-cycle refactor has usually
+already done the work.
 
-**DO NOT** refactor the whole src/ yourself — delegate to the end-refactor subagent.
+## Human-in-the-Loop
+
+Between phases, the workflow consults `@.claude/skills/tdd/human-in-the-loop.md`
+to decide whether to pause for human approval. The default Autonomy Level
+is `full-hitl`, which stops after Test-List, Red, and Refactor (not Green)
+and on prediction failures. Switch levels by editing the setting at the
+top of the HITL file — see that file for the full table.
+
+For unattended batch runs, set the level to `autonomous` to disable all
+stops.
 
 ## Core TDD Principles
 
@@ -144,17 +156,6 @@ TDD practices will feel counterintuitive:
 - Avoiding refactoring
 - Refactoring in the main context instead of via the subagent
 
-## Human-in-the-Loop
-
-Between phases, the workflow consults `@.claude/rules/human-in-the-loop.md`
-to decide whether to pause for human approval. The default Autonomy Level
-is `full-hitl`, which stops after Test-List, Red, and Refactor (not Green)
-and on prediction failures. Switch levels by editing the setting at the
-top of the HITL file — see that file for the full table.
-
-For unattended batch runs, set the level to `autonomous` to disable all
-stops.
-
 ## Technical Setup
 
 See `@.claude/rules/tdd-with-ts-and-vitest.md` for TypeScript and Vitest configuration.
@@ -163,11 +164,11 @@ See `@.claude/rules/tdd-with-ts-and-vitest.md` for TypeScript and Vitest configu
 
 | File | Contains |
 |------|----------|
-| `skills/tdd/SKILL.md` (this file) | The TDD workflow itself |
-| `@.claude/rules/human-in-the-loop.md` | When to pause for human approval (Autonomy Level) |
-| `@.claude/rules/tdd-execution-mode.md` | Phase sequence; interactive-by-default execution |
-| `@.claude/rules/subagent-prompts.md` | What to pass the isolated refactor / end-refactor subagents |
+| `tdd.md` (this file) | The TDD workflow itself |
+| `@.claude/skills/tdd/subagent-prompts.md` | What to pass the isolated refactor subagent |
 | `@.claude/rules/tdd-with-ts-and-vitest.md` | TypeScript + Vitest setup |
+| `@.claude/skills/tdd/human-in-the-loop.md` | Autonomy Level and phase checkpoints |
+| `@.claude/skills/tdd/tdd-execution-mode.md` | How the workflow executes end to end |
 
 ## Running Tests
 
@@ -178,5 +179,5 @@ Run tests with `npm test`.
 - **🚨 ALWAYS USE SKILLS** for test-list/red/green; **ALWAYS USE THE SUBAGENT** for refactor
 - Never write tests, implementation, or refactorings directly
 - Refactor subagent runs in an isolated context — give it everything it needs in the prompt
-- Consult `@.claude/rules/human-in-the-loop.md` at every phase boundary
+- Consult `@.claude/skills/tdd/human-in-the-loop.md` at every phase boundary
 - Trust the process — discomfort is a signal you're doing it right

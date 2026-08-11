@@ -2,14 +2,6 @@
 
 You are now in the **Green Phase** of TDD. Follow these instructions to make the failing test pass with MINIMAL code.
 
-## Why minimality matters
-
-The Green Phase deliberately writes the smallest implementation that turns the active test green — even hardcoded returns, even obviously-incomplete logic. This is not laziness or naïveté:
-
-- It **exposes refactoring opportunities** in the next phase. When the implementation does exactly one thing, structural smells are visible. Over-implemented green code looks "already clean" and hides design problems.
-- It **prevents premature generalization**. The shape of the right abstraction emerges from the second and third test, not the first. Implementing for hypothetical future tests locks in a design before its constraints are known.
-- It **keeps the red-green-refactor cycle short**. Each cycle pays a cost in tokens and context; over-implementing in green collapses several future cycles into one large one and loses the per-test feedback loop.
-
 ## Your Mission
 
 1. Implement the **minimal code** necessary to make the failing test pass
@@ -144,4 +136,4 @@ After completing Green phase, proceed to Refactor phase:
 > **HITL note:** Green has no human checkpoint by default — the default
 > Autonomy Level (`full-hitl`) skips it because Green is the most mechanical
 > phase and stops here mostly produce "yes, continue" with no review value.
-> To enable a Green checkpoint, see `@.claude/rules/human-in-the-loop.md`.
+> To enable a Green checkpoint, see `@.claude/skills/tdd/human-in-the-loop.md`.
