@@ -33,7 +33,7 @@ Everything is shared except how a subagent is started.
 | | Copilot CLI | VS Code agent mode |
 |---|---|---|
 | Invoke a phase | `/red`, `/green`, `/test-list` | same, via `/` |
-| Delegate refactoring | `/agent refactor`, or the model picks it up as a tool | subagent tool (`#runSubagent`), naming the `refactor` agent |
+| Delegate refactoring | `/agent` opens a picker; or name the agent in the prompt; or `copilot --agent=refactor` | agents dropdown in the Chat view, or the subagent tool (`#runSubagent`) naming `refactor` |
 | Tool permissions | `--allow-tool` and CLI config | VS Code approval prompts and terminal auto-approve settings |
 
 The agents declare no `tools:` list on purpose, so they inherit whatever the
@@ -81,6 +81,7 @@ grep -c '^## Refactor (agent: refactor' session.log   # should equal the cycle c
 If a cycle is missing its marker, that Refactor phase did not run under this
 agent definition — treat it as a missing phase, not as a clean cycle.
 
-**Before you start.** `/agent` in the CLI lists the discovered custom agents. If
+**Before you start.** `/agent` in the CLI lists the discovered custom agents
+(in VS Code, `/agents` opens the Configure Custom Agents menu). If
 `refactor` is not among them, nothing below matters: the definition was never
 loaded.

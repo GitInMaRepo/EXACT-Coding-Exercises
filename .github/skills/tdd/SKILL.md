@@ -50,8 +50,9 @@ without invoking the right tool first, you are doing it WRONG.**
 This harness runs unchanged in **Copilot CLI** and in **VS Code agent mode**.
 The only difference is how a subagent is started:
 
-- **Copilot CLI** -- `/agent refactor` starts it explicitly; the model may also
-  pick it up as a tool.
+- **Copilot CLI** -- `/agent` (no argument) opens a picker; choose `refactor`.
+  Naming the agent in your prompt works too -- Copilot infers it. The model may
+  also delegate on its own. Non-interactively: `copilot --agent=refactor`.
 - **VS Code agent mode** -- delegate with the subagent tool (`#runSubagent`),
   naming the `refactor` agent so its own prompt and tool set apply.
 
@@ -138,7 +139,8 @@ run the tests for sanity, and proceed to the next Red phase.
 `## Refactor (agent: refactor, cycle N)`. If it does not, the work did not come
 from this agent definition — the surface delegated to a generic subagent, or
 nothing was delegated at all. Say so plainly instead of accepting the result,
-and retry with the agent named explicitly (`/agent refactor` in the CLI).
+and retry with the agent named explicitly -- `/agent` and pick `refactor` in
+the CLI, or the agents dropdown in VS Code.
 
 ### 5. Repeat
 Return to step 2 (Red phase) for the next test. **Invoke `/red` again.**
