@@ -261,22 +261,14 @@ Return a single summary to the requester:
 ```
 ## End-Refactor (agent: end-refactor)
 
-🏁 End-Refactor Complete:
+**Iterations applied**: [N]
 
-Iterations applied: N
+**Per-iteration**:
+1. [target] -- smells [PRE->POST], cognitive [PRE->POST], APP [PRE->POST], McCabe [PRE->POST]
+2. ...
 
-Per-iteration summary:
-1. [target] — smells [PRE→POST], cog [PRE→POST], APP [PRE→POST], McCabe [PRE→POST]
-2. [target] — ...
-...
-
-Whole-src final state:
-- Total ESLint smells: [final count]
-- Max cognitive complexity: [final max] (in [function])
-- Max APP mass: [final max] (in [function])
-- Max McCabe cyclomatic: [final max] (in [function])
-
-Tests: All passing ✅
+**Final state**: smells [n], max cognitive [n] (in [function]), max APP [n] (in [function]), max McCabe [n] (in [function])
+**Tests**: All passing
 ```
 
 ### Step 9: Apply HITL Checkpoint
