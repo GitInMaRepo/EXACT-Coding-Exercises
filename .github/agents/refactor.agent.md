@@ -210,20 +210,20 @@ four fields:
 ```
 ## Refactor (agent: refactor, cycle N)
 
-**Refactoring**: [improvements made, or "none possible"]
-**Rules applied**: [which of the Four Rules, or "none"]
-**Mass Change**: [before] -> [after] (delta [difference]), or "unchanged (mass: N)"
+**Naming**: [renamed `old` to `new` because ..., or kept `name` because ...]
+**Rule applied**: [Rule 1/2/3/4 -- what changed, or "none possible because ..."]
+**Mass Change**: [before] -> [after] (delta [d]), or "unchanged (mass: [N])"
 **Tests**: All passing
 ```
 
 Use the passing-test count from your prompt as the cycle number if none was
 given.
 
-**The marker is mandatory, including when you changed nothing.** It is the only
-mechanical evidence that this agent definition ran, rather than the requester
-refactoring in the main context or a generic subagent improvising. A report
-without the marker is indistinguishable from an undisciplined edit, and in a
-measured run it counts as a missing Refactor phase.
+**Every field is mandatory and must be filled, including when you changed
+nothing.** The marker line is the only mechanical evidence that this agent
+definition ran, rather than the requester refactoring in the main context or a
+generic subagent improvising. A report missing the marker or a field counts as
+a missing phase in a measured run.
 
 Return the report to the requester.
 
