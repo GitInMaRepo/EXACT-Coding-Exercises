@@ -35,9 +35,9 @@ a human reset usually compounds the misunderstanding.
 
 ## How the workflow consumes this file
 
-Each phase file (`commands/test-list.md`, `commands/red.md`,
+Each phase file (`skills/test-list/SKILL.md`, `skills/red/SKILL.md`,
 `agents/refactor.md`) ends with an instruction to "apply HITL checkpoint per
-`@.claude/rules/human-in-the-loop.md`". `commands/green.md` does **not** —
+`.opencode/rules/human-in-the-loop.md`". `skills/green/SKILL.md` does **not** —
 Green is deliberately exempt by default (see below).
 
 When you read this file as part of a phase, follow the matrix above:

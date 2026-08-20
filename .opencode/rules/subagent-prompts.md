@@ -9,13 +9,13 @@ infrastructure — it stays when the workflow is exported.
 
 ## Workflow Sequence
 
-1. **Test List Phase** → Invoke `/test-list` skill (main context)
+1. **Test List Phase** → Invoke the `test-list` skill (main context)
 2. **For each test:**
-   - **Red Phase** → Invoke `/red` skill (main context)
-   - **Green Phase** → Invoke `/green` skill (main context)
-   - **Refactor Phase** → Launch the `refactor` subagent via the Task tool (isolated context)
+   - **Red Phase** → Invoke the `red` skill (main context)
+   - **Green Phase** → Invoke the `green` skill (main context)
+   - **Refactor Phase** → Launch the `refactor` subagent via the `task` tool (isolated context)
 3. **Continue** until all tests are implemented and passing
-4. **End-Refactor Phase** → Launch the `end-refactor` subagent ONCE via the Task tool (isolated context), over the whole `src/`
+4. **End-Refactor Phase** → Launch the `end-refactor` subagent ONCE via the `task` tool (isolated context), over the whole `src/`
 
 ## Required Prompt Context for the Refactor Subagent (per cycle)
 
