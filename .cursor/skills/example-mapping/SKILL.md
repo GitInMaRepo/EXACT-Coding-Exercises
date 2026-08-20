@@ -1,12 +1,11 @@
 ---
 name: example-mapping
-description: Collaborative Example Mapping session (Matt Wynne) to explore a feature before implementation — discovers rules, concrete examples, open questions and out-of-scope stories through conversation. Invoke when the user explicitly asks for Example Mapping, wants to explore or clarify requirements before coding, or asks to prepare a feature for TDD. Do NOT invoke for coding tasks where the requirements are already settled.
+description: Conduct an Example Mapping session to explore a feature before TDD - discover rules, examples, open questions and out-of-scope stories collaboratively
 ---
-
 
 # Example Mapping
 
-Conduct an interactive Example Mapping session with the user.
+When this skill is invoked, conduct an interactive Example Mapping session with the user.
 
 ## What is Example Mapping?
 
@@ -22,7 +21,7 @@ Example Mapping (by Matt Wynne) is a collaborative technique to explore a featur
 
 Example Mapping is the **bridge between requirements and test lists**:
 1. **Example Mapping** discovers rules and concrete examples through conversation
-2. **Test List** (`/test-list`) converts those examples into `it.todo()` test cases
+2. **Test List** (`test-list` skill) converts those examples into `it.todo()` test cases
 3. **Red-Green-Refactor** implements them one by one
 
 Without Example Mapping, developers often:
@@ -35,7 +34,7 @@ Without Example Mapping, developers often:
 
 ### Session Context: This is an INTERVIEW, not a group workshop
 
-Example Mapping was designed for the Three Amigos around a table. This command runs a
+Example Mapping was designed for the Three Amigos around a table. This skill runs a
 different format: a **1:1 interview** between you and a single domain expert. That
 difference changes how you handle open questions.
 
@@ -84,7 +83,7 @@ If the user provides partial information (e.g., a card image, a brief descriptio
   - "Are there any limits, caps, or constraints?"
   - "Are there special cases or thresholds?"
   - "Does this feature interact with anything else?"
-- **Use AskUserQuestion** to present specific options when you need clarification
+- **Offer concrete options** when you need clarification - picking is easier than formulating
 - Each distinct rule gets its own blue card
 - **Confirm each rule with the user** before recording it
 
@@ -104,7 +103,7 @@ If the user provides partial information (e.g., a card image, a brief descriptio
 See "Session Context" above: in an interview, asking beats parking.
 
 - When something is unclear, **do NOT continue past it** - stop and ask
-- Use AskUserQuestion to resolve questions in real time
+- Resolve questions in real time, in the conversation
 - Present options when possible to make it easy for the user to answer
 - A resolved question becomes a rule or an example - it leaves no red card behind
 - **Only if the user cannot or does not want to answer**, write a red card and move on:
@@ -179,9 +178,9 @@ You MUST ask the user at least these categories of questions:
 4. **Interactions**: "Does this feature interact with or depend on other features?"
 
 ### How to Ask
-- Use the **AskUserQuestion tool** for structured questions with options
+- Offer **numbered options** for questions with a small, known set of answers
 - Use **plain text questions** for open-ended exploration
-- **Batch related questions** (up to 4) in a single AskUserQuestion call
+- **Batch related questions** (up to 4) into a single message
 - **Never proceed to writing the file** until all critical questions are answered or explicitly marked as open
 
 ## Output Format
@@ -239,12 +238,12 @@ After writing the file, report the health of the Example Mapping:
 | Green cards (Examples) | Few -> Thin coverage | Need more concrete examples |
 | Green cards **per rule** | Many (>3) under one rule -> Hidden rules | Check whether the examples differ in reason, not just in values; split the blue card |
 | New Stories | Several -> Slice was too big | Feed them back into story slicing; the current story is still fine to build |
-| Overall | Balanced -> Ready | Proceed to `/test-list` |
+| Overall | Balanced -> Ready | Proceed to the `test-list` skill |
 
 ## Next Step
 
 After completing the Example Mapping, suggest:
-- If healthy: "Example Mapping complete. Use `/test-list` to convert examples into TDD test cases."
+- If healthy: "Example Mapping complete. Invoke the `test-list` skill to convert examples into TDD test cases."
 - If too many questions: "There are still open questions. Resolve them before proceeding."
 - If too large: "Consider splitting this feature into smaller stories."
 - If a rule carries many examples: "Rule X may hide a second rule - worth splitting before writing tests."
