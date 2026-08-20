@@ -132,19 +132,37 @@ than this — what matters is that everything passes.)
 
 If all checks pass, you're ready for the workshop!
 
+
 ## Agent Configuration
 
-This repo ships the EXACT Coding TDD workflow preconfigured for **four coding
-agents**. They are equivalent — use whichever you have. Version **2026-07-28**.
+This repo ships the EXACT Coding TDD workflow preconfigured for **five coding
+agents**. They are equivalent — use whichever you have. Version **2026-08-12**.
 
-| Agent | Directory | Start a TDD session with |
-|-------|-----------|--------------------------|
-| Claude Code | `.claude/` | Ask for TDD in plain language ("let's TDD this kata") |
-| pi | `.pi/` | `/skill:tdd`, or ask for TDD in plain language |
-| OpenCode | `.opencode/` | The `tdd` command |
-| Cursor | `.cursor/` | Ask for TDD in plain language |
+**Claude Code is the default and lives on `main`.** Every other agent has its
+own branch, carrying exactly one configuration:
 
-**You have to ask for the workflow.** None of the four load it automatically. A
+| Agent | Branch | Directory | Start a TDD session with |
+|-------|--------|-----------|--------------------------|
+| Claude Code | `main` | `.claude/` | Ask for TDD in plain language ("let's TDD this kata") |
+| GitHub Copilot | `harness/copilot` | `.github/` | `/tdd`, or ask for TDD in plain language |
+| Cursor | `harness/cursor` | `.cursor/` | Ask for TDD in plain language |
+| OpenCode | `harness/opencode` | `.opencode/` | The `tdd` command |
+| pi | `harness/pi` | `.pi/` | `/skill:tdd`, or ask for TDD in plain language |
+
+```bash
+git checkout harness/copilot   # or: cursor, opencode, pi
+```
+
+**Why one branch per agent.** Two reasons. Copilot reads `.claude/skills/` and
+`.claude/agents/` as its own, so a tree holding both configurations offers
+Copilot every skill twice. And keeping each harness alone in its tree is what
+makes the workflows comparable: whatever a session does, only one configuration
+could have caused it. The harness branches therefore carry no `.claude/`.
+
+Model- or surface-specific variants get a suffix on the same scheme, for example
+`harness/copilot-vscode`.
+
+**You have to ask for the workflow.** None of them load it automatically. A
 session where you never mention TDD gets no Red-Green-Refactor discipline, no
 prediction blocks, no checkpoints — which is what you want when you are just
 fixing a typo. Say "using TDD" and the whole workflow comes in.
@@ -189,10 +207,11 @@ Other levels: `refactor-only`, `red-only`, `every-n-tests N`, `task-end`,
 
 | Agent | File |
 |-------|------|
-| Claude Code | `.claude/rules/human-in-the-loop.md` |
-| pi | `.pi/rules/human-in-the-loop.md` |
-| OpenCode | `.opencode/rules/human-in-the-loop.md` |
+| Claude Code | `.claude/skills/tdd/human-in-the-loop.md` |
+| GitHub Copilot | `.github/rules/human-in-the-loop.md` |
 | Cursor | `.cursor/rules/human-in-the-loop.mdc` |
+| OpenCode | `.opencode/rules/human-in-the-loop.md` |
+| pi | `.pi/rules/human-in-the-loop.md` |
 
 That file is the single source of truth. The phase files point at it but contain
 no stop logic themselves, so changing the level changes the whole workflow.
@@ -200,8 +219,8 @@ no stop logic themselves, so changing the level changes the whole workflow.
 ### Example Mapping
 
 Separate from TDD, for exploring a feature *before* you write any tests:
-`/example-mapping` in Claude Code, or the `example-mapping` skill in Cursor,
-OpenCode and pi. It facilitates a session over story, rules, examples and
+`/example-mapping` in Claude Code and Copilot, or the `example-mapping` skill in
+Cursor, OpenCode and pi. It facilitates a session over story, rules, examples and
 questions, plus New Story cards for behaviour that turns out to belong to a
 different story. The result goes to a markdown file. It asks you for the rules
 and examples; it does not invent them.
@@ -218,7 +237,16 @@ extension bundled at `.pi/extensions/subagent/`. **On first use pi asks whether
 you trust the project — say yes.** If you decline, pi has no way to delegate and
 you end up with a workflow that silently skips refactoring.
 
-The other three agents have subagents natively and need nothing extra.
+The other four agents have subagents natively and need nothing extra.
+
+### Copilot: CLI and VS Code
+
+The `harness/copilot` branch runs in both **Copilot CLI** and **VS Code agent
+mode** from the same `.github/` tree. Skills live in `.github/skills/`, the two
+refactor agents in `.github/agents/`. In the CLI you can force a phase with
+`/red`, `/green` and so on, and delegate explicitly with `/agent refactor`; in
+VS Code the same skills appear under `/` and the agents are invoked as
+subagents. See `.github/README.md` for the differences that remain.
 
 ### Where the workflow comes from
 
