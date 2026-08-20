@@ -214,11 +214,21 @@ No refactoring performed - code is already clean.
 
 ### Step 7: Report Completion
 ```
+## Refactor (agent: refactor, cycle N)
+
 Refactoring Complete:
 **Refactoring**: [improvements made or "none possible"]
 **Mass Change**: [before -> after] (if calculated)
 **Tests**: All passing
 ```
+
+Use the passing-test count from your prompt as the cycle number if none was
+given.
+
+**The marker line is mandatory, including when you changed nothing.** It is the
+only mechanical evidence that this agent definition ran, rather than the
+requester refactoring in the main context or a generic subagent improvising. A
+report without it counts as a missing Refactor phase.
 
 Return the report to the requester.
 
