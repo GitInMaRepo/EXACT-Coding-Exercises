@@ -203,12 +203,27 @@ No refactoring performed - code is already clean.
 ```
 
 ### Step 7: Report Completion
+
+Your report MUST begin with the marker line below, verbatim, followed by the
+four fields:
+
 ```
-Refactoring Complete:
-**Refactoring**: [improvements made or "none possible"]
-**Mass Change**: [before -> after] (if calculated)
+## Refactor (agent: refactor, cycle N)
+
+**Refactoring**: [improvements made, or "none possible"]
+**Rules applied**: [which of the Four Rules, or "none"]
+**Mass Change**: [before] -> [after] (delta [difference]), or "unchanged (mass: N)"
 **Tests**: All passing
 ```
+
+Use the passing-test count from your prompt as the cycle number if none was
+given.
+
+**The marker is mandatory, including when you changed nothing.** It is the only
+mechanical evidence that this agent definition ran, rather than the requester
+refactoring in the main context or a generic subagent improvising. A report
+without the marker is indistinguishable from an undisciplined edit, and in a
+measured run it counts as a missing Refactor phase.
 
 Return the report to the requester.
 

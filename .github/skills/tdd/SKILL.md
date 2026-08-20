@@ -134,6 +134,12 @@ The agent will:
 **DO NOT** refactor code yourself. After the agent returns, read its summary,
 run the tests for sanity, and proceed to the next Red phase.
 
+**Verify the marker.** The report must start with
+`## Refactor (agent: refactor, cycle N)`. If it does not, the work did not come
+from this agent definition — the surface delegated to a generic subagent, or
+nothing was delegated at all. Say so plainly instead of accepting the result,
+and retry with the agent named explicitly (`/agent refactor` in the CLI).
+
 ### 5. Repeat
 Return to step 2 (Red phase) for the next test. **Invoke `/red` again.**
 
@@ -157,6 +163,9 @@ APP, McCabe). Stop when no metric improves further.
 ```
 
 **DO NOT** refactor the whole `src/` yourself -- delegate it.
+
+**Verify the marker.** The report must start with
+`## End-Refactor (agent: end-refactor)`. Same rule as above if it is missing.
 
 ## Core TDD Principles
 

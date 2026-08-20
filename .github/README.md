@@ -48,8 +48,39 @@ OpenCode and pi harnesses.
   tree; batch runs need the surface configured by hand.
 - **Delegation is inferred, not forced.** Copilot decides whether to load a
   skill or delegate to an agent. The orchestrator states the requirement
-  loudly, but if you are measuring the workflow, verify from the transcript
-  that the refactor phases actually ran in a subagent.
+  loudly, but it cannot compel the surface. See "Verifying delegation" below.
 - **This tree must not coexist with `.claude/`.** Copilot reads
   `.claude/skills/` and `.claude/agents/` as its own and would see every skill
   twice. That is why each harness lives on its own branch.
+
+## Verifying delegation
+
+Two things can go wrong invisibly: the refactor runs in the main context, or it
+runs in a subagent that never loaded `agents/refactor.agent.md` and improvises
+instead. Both produce output that looks plausible.
+
+**In the CLI, while it happens.** A real subagent renders as its own block: a
+header carrying the model it runs on, e.g. `Refactor(bedrock/claude-opus-5@...)`,
+its tool calls indented beneath it, and its own elapsed time. Main-context work
+is flush left with no model annotation.
+
+**In the transcript, afterwards.** Both agents must open their report with a
+marker line, even when they changed nothing:
+
+```
+## Refactor (agent: refactor, cycle N)
+## End-Refactor (agent: end-refactor)
+```
+
+A generic subagent does not emit these. Over a batch of runs:
+
+```bash
+grep -c '^## Refactor (agent: refactor' session.log   # should equal the cycle count
+```
+
+If a cycle is missing its marker, that Refactor phase did not run under this
+agent definition — treat it as a missing phase, not as a clean cycle.
+
+**Before you start.** `/agent` in the CLI lists the discovered custom agents. If
+`refactor` is not among them, nothing below matters: the definition was never
+loaded.

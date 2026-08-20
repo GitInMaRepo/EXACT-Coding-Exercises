@@ -250,10 +250,12 @@ Return to Step 0 with the new code as the new PRE baseline. Repeat until one ite
 
 ### Step 8: Report Completion
 
-Return a single summary to the requester:
+Return a single summary to the requester. It MUST begin with the marker line
+below, verbatim — it is the only mechanical evidence that this agent definition
+ran. Emit it even when no iteration improved any metric.
 
 ```
-🏁 End-Refactor Complete:
+## End-Refactor (agent: end-refactor)
 
 Iterations applied: N
 
