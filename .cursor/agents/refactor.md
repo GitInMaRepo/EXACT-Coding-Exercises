@@ -105,9 +105,9 @@ Your return value is the report the requesting context reads. Use this format:
 ```
 ## Refactor (agent: refactor, cycle N)
 
-**Naming**: [renamed X to Y / kept X because Z]
-**Mass Change**: [before → after] (delta)
-**Rule applied**: [Rule 2/3/4 improvement, or "none possible because …"]
+**Naming**: [renamed `old` to `new` because ..., or kept `name` because ...]
+**Rule applied**: [Rule 1/2/3/4 -- what changed, or "none possible because ..."]
+**Mass Change**: [before] -> [after] (delta [d]), or "unchanged (mass: [N])"
 **Tests**: All passing
 ```
 
@@ -118,10 +118,11 @@ abstractions).
 Use the passing-test count from your prompt as the cycle number if none was
 given.
 
-**The marker line is mandatory, including when you changed nothing.** It is the
-only mechanical evidence that this agent definition ran, rather than the
-requester refactoring in the main context or a generic subagent improvising. A
-report without it counts as a missing Refactor phase.
+**Every field is mandatory and must be filled, including when you changed
+nothing.** The marker line is the only mechanical evidence that this agent
+definition ran, rather than the requester refactoring in the main context or a
+generic subagent improvising. A report missing the marker or a field counts as
+a missing phase in a measured run.
 
 ### Step 7: Apply HITL Checkpoint
 
