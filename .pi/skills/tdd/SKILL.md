@@ -23,7 +23,8 @@ reading the session afterwards. A missing marker makes that phase invisible.
 | Red       | `## Red` heading                          | a new cycle started                  |
 | Red       | `Red Phase Complete:` + prediction lines  | both predictions were made and scored |
 | Green     | `## Green` heading                        | a minimal implementation was added   |
-| Refactor  | `subagent` tool call with `agent: "refactor"` | refactoring ran in an isolated context |
+| Refactor  | `subagent` tool call with `agent: "refactor"`, whose report opens with `## Refactor (agent: refactor, cycle N)` | refactoring ran in an isolated context, under the agent definition |
+| End-Refactor | `subagent` tool call with `agent: "end-refactor"`, whose report opens with `## End-Refactor (agent: end-refactor)` | the final whole-src pass ran, under the agent definition |
 
 **Format for each Red phase output:**
 
@@ -146,6 +147,8 @@ The agent will improve code while keeping tests green:
 - Calculate APP (Absolute Priority Premise) mass before/after
 
 **DO NOT** refactor code yourself -- let the subagent do it. After it returns, read its summary, apply any test-runs needed for sanity, and proceed to the next Red phase.
+
+**Verify the marker.** The subagent's report must start with `## Refactor (agent: refactor, cycle N)`. If it does not, the work did not come from the agent definition -- either nothing was delegated, or a generic subagent improvised. Say so plainly instead of accepting the result.
 
 ### 5. Repeat
 Return to step 2 (Red phase) for the next test.
