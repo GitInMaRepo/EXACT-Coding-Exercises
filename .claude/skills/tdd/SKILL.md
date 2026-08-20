@@ -106,6 +106,8 @@ The agent will improve code while keeping tests green:
 
 **DO NOT** refactor code yourself — let the agent do it. After it returns, read its summary, apply any test-runs needed for sanity, and proceed to the next Red phase.
 
+**Verify the marker.** The agent's report must start with `## Refactor (agent: refactor, cycle N)`. If it does not, the work did not come from the agent definition — either nothing was delegated, or a generic subagent improvised. Say so plainly instead of accepting the result, and retry with `Task({ subagent_type: "refactor", ... })`.
+
 ### 5. Repeat
 Return to step 2 (Red phase) for the next test. **Invoke the `red` skill again.**
 
