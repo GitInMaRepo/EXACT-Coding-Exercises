@@ -28,8 +28,8 @@ the session afterwards. A missing marker makes that phase invisible.
 | Red       | `## Red` heading                          | a new cycle started                  |
 | Red       | `Red Phase Complete:` + prediction lines  | both predictions were made and scored |
 | Green     | `## Green` heading                        | a minimal implementation was added   |
-| Refactor  | Task call to the `refactor` subagent      | refactoring ran in an isolated context |
-| End-Refactor | Task call to the `end-refactor` subagent | the final whole-src pass ran        |
+| Refactor  | Task call to the `refactor` subagent, whose report opens with `## Refactor (agent: refactor, cycle N)` | refactoring ran in an isolated context, under the agent definition |
+| End-Refactor | Task call to the `end-refactor` subagent, whose report opens with `## End-Refactor (agent: end-refactor)` | the final whole-src pass ran, under the agent definition |
 
 **IMPORTANT**: emit every text marker as **assistant output text**, not only
 inside private reasoning. A marker that appears only in a thinking/reasoning

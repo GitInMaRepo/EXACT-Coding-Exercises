@@ -103,7 +103,7 @@ Recalculate mass after refactoring and note the delta.
 Your return value is the report the requesting context reads. Use this format:
 
 ```
-## Refactor
+## Refactor (agent: refactor, cycle N)
 
 **Naming**: [renamed X to Y / kept X because Z]
 **Mass Change**: [before → after] (delta)
@@ -114,6 +114,14 @@ Your return value is the report the requesting context reads. Use this format:
 If no improvement is possible, still report and document in detail why the code
 is already clean (naming fits, no duplication, minimal mass, no unnecessary
 abstractions).
+
+Use the passing-test count from your prompt as the cycle number if none was
+given.
+
+**The marker line is mandatory, including when you changed nothing.** It is the
+only mechanical evidence that this agent definition ran, rather than the
+requester refactoring in the main context or a generic subagent improvising. A
+report without it counts as a missing Refactor phase.
 
 ### Step 7: Apply HITL Checkpoint
 

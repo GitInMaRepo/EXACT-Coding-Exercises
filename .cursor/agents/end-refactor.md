@@ -258,7 +258,7 @@ Return to Step 0 with the new code as the new PRE baseline. Repeat until one ite
 Return a single summary to the requester:
 
 ```
-## Refactor (final pass)
+## End-Refactor (agent: end-refactor)
 
 🏁 End-Refactor Complete:
 
